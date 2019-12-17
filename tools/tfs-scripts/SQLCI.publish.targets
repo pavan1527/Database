@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="default" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  
+	<Import Project="$(SQLCI_global_file)"/>  
+    <Import Project="$(SQLCI_properties_file)"/>  
+    <UsingTask TaskName="SQLCIPublish" AssemblyFile="$(sqlCIFolder)/sqlCI.exe"/>
+		
+	<Target Name="default">
+			<CallTarget Targets="sqlCI_publish" Condition="'$(disabled.ToUpper())' != 'TRUE'"/>
+			<Message Text="Skipping $(SQLCI_properties_file): disabled is set to true." Condition="'$(disabled.ToUpper())' == 'TRUE'" Importance="high"/>
+	</Target>
+	
+  <Target Name="sqlCI_publish">
+	<Message Text="Running SQLCI publish for properties file $(SQLCI_properties_file)"  Importance="high"/>
+	
+	<SQLCIPublish package="$(package)" 
+				nugetFeedApiKey="$(nugetFeedApiKey)" 
+				nugetFeedUrl="$(nugetFeedUrl)"
+				licenseSerialKey="$(licenseSerialKey)"
+				sendErrorReports="$(sendErrorReports)"/>
+  </Target>
+</Project>
